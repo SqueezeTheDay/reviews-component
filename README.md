@@ -13,11 +13,10 @@
 ## Usage
 
 > Database
--- Start your mysql database by running `mysql.server start`
--- Build my database by cd'ing into my database directory, then run `mysql -u -root < schema.sql`
-  -- note: instead of `root`, you may need to user your own username. also, if your database is
-  password protected, use the `-p` flag with that command.
--- Seed the database: from the same database directory, run `node seeders.js` to seed the databse.
+--Create mock data by running csvSeeder.js in mockData.
+--To create CSV for couch, run `node csvSeeder.js couch`
+--For postgreSQL, turn on psql server by running psql postgres in your terminal
+--Then generate database by running RDBMschema.sql in psql
 
 <!-- ## Requirements
 
