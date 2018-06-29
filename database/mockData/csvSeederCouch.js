@@ -9,7 +9,7 @@ fs.writeFileSync('./reviews.csv', header);
 
 let reviews = [];
 for (let i = 1; i <= 10e6; i += 1) {
-  reviews.push(`${generate.generateUserData()},${generate.generateReviewsData(generate.getRandomNumBetween(1, 10e6))}`);
+  reviews.push(`${generate.generateUserData()},${generate.generateReviewsData(i).csvFormat}`);
   if (i % 100000 === 0) {
     fs.appendFileSync('./reviews.csv', `${reviews.join('\n')}\n`);
     reviews = [];

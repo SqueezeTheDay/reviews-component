@@ -22,11 +22,11 @@ const createLongDate = function (datetime) {
 
 const ReviewDetailsBox = props => (
   <ReviewDetailsWrapper>
-  <div className="review-details-box">
-    <span className="created-at"> {createLongDate(props.review.createdAt)} </span>
-    <div className="title"> {props.review.title} </div>
-    <div className="details"> {props.review.details} </div>
-  </div>
+    <div className="review-details-box">
+      <span className="created-at"> {createLongDate(props.review.created_at)} </span>
+      <div className="title"> {props.review.title} </div>
+      <div className="details"> {props.review.details} </div>
+    </div>
   </ReviewDetailsWrapper>
 );
 

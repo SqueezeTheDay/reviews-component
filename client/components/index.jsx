@@ -17,15 +17,14 @@ class App extends React.Component {
     this.getReviews = this.getReviews.bind(this);
   }
   componentDidMount() {
-    console.log('productId: ', this.state.productId);
     this.getReviews();
   }
   getReviews() {
     axios.get(`http://localhost:3002/reviews/${this.state.productId}/`)
       .then((res) => {
-        console.log('res.data: ', res.data);
+        console.log(res.data.rows)
         this.setState({
-          reviews: res.data,
+          reviews: res.data.rows,
         });
       })
       .catch((err, res) => {
@@ -37,7 +36,7 @@ class App extends React.Component {
       <BodyWrapper>
         {
           this.state.reviews.map(review => (
-            <ReviewRow review={review} key={review.reviewId} />))
+            <ReviewRow review={review} key={review.reviewid} />))
         }
       </BodyWrapper>
     );
