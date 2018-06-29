@@ -2,16 +2,16 @@ import React from 'react';
 import axios from 'axios';
 import ReviewInteractorWrapper from '../styles/ReviewInteractor.style.js';
 
-axios.defaults.baseURL = '/reviews-module';
+// axios.defaults.baseURL = '/reviews-module';
 
 class ReviewInteractor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      votedHelpful: this.props.review.votedHelpful,
-      votedNotHelpful: this.props.review.votedNotHelpful,
+      votedHelpful: this.props.review.voted_helpful,
+      votedNotHelpful: this.props.review.voted_not_helpful,
       inappropriate: this.props.review.inappropriate,
-      id: this.props.review.reviewId,
+      id: this.props.review.reviewid,
       leftFeedback: null,
     };
     this.updateReview = this.updateReview.bind(this);
@@ -21,6 +21,8 @@ class ReviewInteractor extends React.Component {
     const { className: field } = e.target;
     const { leftFeedback } = this.state;
     console.log('you clicked on ', field);
+    console.log('id: ', this.state.id);
+    console.log('value: ', this.state[field] + 1);
     if (!leftFeedback) {
       axios.put('/reviews', {
         reviewId: this.state.id,

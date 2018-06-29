@@ -42,6 +42,7 @@ const generateReviewsData = (productId) => {
   const votedHelpful = getRandomNumBetween(0, 10);
   const votedNotHelpful = getRandomNumBetween(0, 10);
   const inappropriate = 0;
+  const userId = getRandomNumBetween(1, 10e6);
   if (db !== 'couch') {
     data.push(
       createdAt, title, details, fit, rating, whatYouLike, whatYouDidntLike,
@@ -53,7 +54,11 @@ const generateReviewsData = (productId) => {
       votedHelpful, votedNotHelpful, inappropriate, productId,
     );
   }
-  return data.join(',');
+  let psqlFormatted = data.map(val => typeof val === 'string' ? `'${val}'` : val);
+  return {
+    csvFormat: data.join(','),
+    psqlFormat: psqlFormatted.join(','),
+  }
 };
 
 module.exports = {

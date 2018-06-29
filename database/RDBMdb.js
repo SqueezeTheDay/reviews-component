@@ -1,23 +1,19 @@
-// const { Client } = require('pg');
-const pg = require('pg');
+const { Client } = require('pg');
+const helpers = require('./helpers.js');
 
-const port = 5432;
-const connectionString = `postgres://staceyrutherford:''@localhost/ip:${port}/lululemon`;
-const client = new pg.Client(connectionString);
-// const client = new Client({
-//   user: 'staceyrutherford',
-//   host: 'localhost',
-//   database: 'lululemon',
-//   port: 5432,
-// });
+const client = new Client({
+  host: 'localhost',
+  user: 'staceyrutherford',
+  database: 'lululemon',
+  port: 5432,
+});
 client.connect((err, conn) => {
   if (err) {
-    console.log('could not connect to postgres', err)
+    console.log('could not connect to postgres', err);
   } else {
     console.log('success');
   }
 });
-console.log("db ran")
 const getReviews = function (productId, callback) {
   const query = `
       SELECT 
@@ -34,20 +30,23 @@ const getReviews = function (productId, callback) {
       reviews.voted_not_helpful AS votedNotHelpful
     FROM reviews
     LEFT JOIN users ON reviews.user_id=users.id
-    WHERE reviews.product_id=?;
+    WHERE reviews.product_id=${productId} ORDER BY created_at DESC;
     `;
 
-  client.query(query, [productId], (err, result) => {
-    if (err) { callback(err, null); }
-    callback(null, result);
+  client.query(query, (err, result) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, result);
+    }
   });
 };
 
 const updateReview = function (reviewId, field, value, callback) {
   const snakedField = helpers.camelToSnake(field);
   console.log(reviewId, snakedField, value);
-  const query = `UPDATE reviews SET ${snakedField}=? WHERE id=?;`;
-  client.query(query, [value, reviewId], (err) => {
+  const query = `UPDATE reviews SET ${snakedField}=${value} WHERE id=${reviewId};`;
+  client.query(query, (err) => {
     if (err) {
       throw err;
     }
@@ -76,24 +75,28 @@ const createReview = function (newReview) {
     `;
 
   client.query(query, (err) => {
-    if (err) { throw err; }
-    console.log('new review added to RDBMS db');
+    if (err) {
+      throw err;
+    } else {
+      console.log('new review added to RDBMS db');
+    }
   });
 };
 
-const deleteReview = function (productId) {
-  const query = `DELETE FROM reviews WHERE reviews.product_id = ${productId}`;
+const deleteReviews = function (productId) {
+  const query = `DELETE FROM reviews WHERE reviews.id = (SELECT reviews.id FROM reviews WHERE reviews.product_id=${productId} ORDER BY created_at LIMIT 1)`;
   client.query(query, (err) => {
-    if (err) { throw err; }
-    console.log('review deleted to RDBMS db');
+    if (err) {
+      throw err;
+    } else {
+      console.log('review deleted to RDBMS db');
+    }
   });
 };
-
-client.end();
 
 module.exports = {
   getReviews,
   updateReview,
   createReview,
-  deleteReview,
+  deleteReviews,
 };
